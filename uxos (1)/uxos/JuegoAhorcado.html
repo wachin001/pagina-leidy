@@ -1,0 +1,137 @@
+<html>
+<head>
+  <title>Juego del Ahorcado</title>
+  <link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+<body>
+  <h1>Juego del Ahorcado</h1>
+  <div id="word"></div>
+  <div id="letters"></div>
+  <script src="script.js"></script>
+ <style>
+body {
+      background-image: url("images/logo-el-porvenir.png");
+      background-repeat: no-repeat;
+      background-size: contain;
+    }
+
+#word {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+#letters {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.letter {
+  width: 30px;
+  height: 30px;
+  border: 1px solid black;
+  margin: 5px;
+  text-align: center;
+  line-height: 30px;
+  cursor: pointer;
+}
+ </style>
+<script>
+    var words = [
+  "reciclaje",
+  "residuos",
+  "plástico",
+  "vidrio",
+  "papel",
+  "cartón",
+  "aluminio",
+  "metal",
+  "botellas",
+  "latas",
+  "envases",
+  "bolsas",
+  "contenedores",
+  "ecología",
+  "sostenibilidad",
+  "reutilizar",
+  "reducir",
+  "reutilización",
+  "compostaje",
+  "contaminación",
+  "basura"
+];
+var selectedWord = words[Math.floor(Math.random() * words.length)];
+var guessedLetters = [];
+var remainingAttempts = 6;
+
+function createLetter(letter) {
+  var letterElement = document.createElement("div");
+  letterElement.innerHTML = letter;
+  letterElement.className = "letter";
+  letterElement.addEventListener("click", function() {
+    checkLetter(letter);
+    this.removeEventListener("click", arguments.callee);
+  });
+  document.getElementById("letters").appendChild(letterElement);
+}
+
+function updateWord() {
+  var wordElement = document.getElementById("word");
+  var wordHTML = "";
+  for (var i = 0; i < selectedWord.length; i++) {
+    if (guessedLetters.indexOf(selectedWord[i]) !== -1) {
+      wordHTML += selectedWord[i];
+    } else {
+      wordHTML += "_";
+    }
+    wordHTML += " ";
+  }
+  wordElement.innerHTML = wordHTML;
+}
+
+function checkLetter(letter) {
+  if (selectedWord.indexOf(letter) !== -1) {
+    guessedLetters.push(letter);
+    updateWord();
+    checkWin();
+  } else {
+    remainingAttempts--;
+    if (remainingAttempts === 0) {
+      endGame(false);
+    }
+  }
+}
+
+function checkWin() {
+  if (guessedLetters.length === selectedWord.length) {
+    endGame(true);
+  }
+}
+
+function endGame(win) {
+  var message = win ? "¡Ganaste!" : "¡Perdiste!";
+  alert(message);
+  resetGame();
+}
+
+function resetGame() {
+  selectedWord = words[Math.floor(Math.random() * words.length)];
+  guessedLetters = [];
+  remainingAttempts = 6;
+  document.getElementById("letters").innerHTML = "";
+  createAlphabet();
+  updateWord();
+}
+
+function createAlphabet() {
+  var alphabet = "abcdefghijklmnopqrstuvwxyz";
+  for (var i = 0; i < alphabet.length; i++) {
+    createLetter(alphabet[i]);
+  }
+}
+
+createAlphabet();
+updateWord();
+</script>
+<a href="index.html" class="button">Inicio </a>
+</body>
+</html>
